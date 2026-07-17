@@ -26,11 +26,11 @@ export default function LoginForm() {
 
     if (state.success) {
       toast.success(state.message || "Login successful.");
-      router.push("/dashboard/profile");
+      router.replace("/dashboard/profile");
     } else {
       toast.error(state.message || "Login failed.");
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
     <form action={action} className="space-y-4">
