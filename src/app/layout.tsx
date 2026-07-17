@@ -39,8 +39,9 @@ export default function RootLayout({
         montserrat.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
-      <Toaster richColors position="top-right" />
+      <body>
+        {children} <Toaster richColors position="top-right" />
+      </body>
     </html>
   );
 }
