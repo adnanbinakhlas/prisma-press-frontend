@@ -34,16 +34,16 @@ export const loginAction = async (
 
   if (result.success) {
     const cookieStore = await cookies();
-    cookieStore.set(
-      tokenConstant.accessToken,
-      result.data[tokenConstant.accessToken],
-      { httpOnly: true, maxAge: 60 * 60 * 24 * 1, sameSite: "lax" },
-    );
-    cookieStore.set(
-      tokenConstant.refreshToken,
-      result.data[tokenConstant.refreshToken],
-      { httpOnly: true, maxAge: 60 * 60 * 24 * 7, sameSite: "lax" },
-    );
+    cookieStore.set(tokenConstant.accessToken, result.data.accessToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 1,
+      sameSite: "lax",
+    });
+    cookieStore.set(tokenConstant.refreshToken, result.data.refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "lax",
+    });
   }
 
   return result;

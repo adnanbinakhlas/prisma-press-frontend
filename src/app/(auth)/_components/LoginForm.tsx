@@ -47,6 +47,7 @@ export default function LoginForm() {
             id="email"
             name="email"
             type="email"
+            defaultValue={"tod.reichel@gmail.com"}
             placeholder="name@example.com"
             className="pl-10"
           />
@@ -66,6 +67,7 @@ export default function LoginForm() {
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
+            defaultValue={"123456"}
             placeholder="••••••••"
             className="pl-10 pr-10"
           />
