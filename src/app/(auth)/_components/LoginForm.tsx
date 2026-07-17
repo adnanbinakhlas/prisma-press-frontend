@@ -14,16 +14,19 @@ import {
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { loginAction } from "../_actions/loginAction";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, action, pending] = useActionState(loginAction, false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!state) return;
 
     if (state.success) {
       toast.success(state.message || "Login successful.");
+      router.push("/dashboard/profile");
     } else {
       toast.error(state.message || "Login failed.");
     }
