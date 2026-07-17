@@ -11,12 +11,13 @@ import {
   IconMail,
 } from "@tabler/icons-react";
 import { useState } from "react";
+import { loginAction } from "../_actions/loginAction";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <form className="space-y-4">
+    <form action={loginAction} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
 
@@ -28,6 +29,7 @@ export default function LoginForm() {
 
           <Input
             id="email"
+            name="email"
             type="email"
             placeholder="name@example.com"
             className="pl-10"
@@ -46,6 +48,7 @@ export default function LoginForm() {
 
           <Input
             id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
             className="pl-10 pr-10"

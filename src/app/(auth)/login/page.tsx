@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { IconLogin2 } from "@tabler/icons-react";
-import LoginForm from "./_components/LoginForm";
+import LoginForm from "../_components/LoginForm";
 
 export default function LoginPage() {
   return (
