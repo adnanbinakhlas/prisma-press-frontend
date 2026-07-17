@@ -6,18 +6,31 @@ import { Label } from "@/components/ui/label";
 import {
   IconEye,
   IconEyeOff,
+  IconLoader2,
   IconLock,
   IconLogin2,
   IconMail,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { loginAction } from "../_actions/loginAction";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [state, action, pending] = useActionState(loginAction, false);
+
+  useEffect(() => {
+    if (!state) return;
+
+    if (state.success) {
+      toast.success(state.message || "Login successful.");
+    } else {
+      toast.error(state.message || "Login failed.");
+    }
+  }, [state]);
 
   return (
-    <form action={loginAction} className="space-y-4">
+    <form action={action} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
 
@@ -64,9 +77,18 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <Button className="w-full gap-2">
-        <IconLogin2 size={18} />
-        Sign In
+      <Button type="submit" disabled={pending} className="w-full gap-2">
+        {pending ? (
+          <>
+            <IconLoader2 size={18} className="animate-spin" />
+            Signing In...
+          </>
+        ) : (
+          <>
+            <IconLogin2 size={18} />
+            Sign In
+          </>
+        )}
       </Button>
     </form>
   );

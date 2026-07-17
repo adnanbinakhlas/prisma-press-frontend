@@ -2,10 +2,23 @@
 
 import env from "@/config/env";
 
-export const loginAction = async (formdata: FormData): Promise<void> => {
+type TLoginState = {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data?: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export const loginAction = async (
+  prevState: TLoginState,
+  formData: FormData,
+) => {
   const payload = {
-    email: formdata.get("email"),
-    password: formdata.get("password"),
+    email: formData.get("email"),
+    password: formData.get("password"),
   };
   const url = `${env.api_url}/auth/login`;
 
@@ -16,6 +29,5 @@ export const loginAction = async (formdata: FormData): Promise<void> => {
   });
 
   const result = await response.json();
-
-  console.log(result);
+  return result;
 };
