@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { navigation, userMenuItems } from "@/constant/navigation";
 import { cn } from "@/lib/utils";
+import { logoutService } from "@/services/logout";
 import { TUser } from "@/types/user";
 import {
   IconBook2,
@@ -14,7 +15,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function MobileNav({ user }: { user: TUser }) {
+export default function MobileNav({ user }: { user: TUser | undefined }) {
   const pathname = usePathname();
 
   const isActiveRoute = (href: string) => {
@@ -23,6 +24,10 @@ export default function MobileNav({ user }: { user: TUser }) {
     }
 
     return pathname.startsWith(href);
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    await logoutService();
   };
 
   return (
@@ -34,7 +39,7 @@ export default function MobileNav({ user }: { user: TUser }) {
       </SheetTrigger>
 
       <SheetContent side="right" className="w-[320px]">
-        <div className="mt-8 flex flex-col">
+        <div className="mt-8 flex flex-col px-8">
           {/* Mobile Logo */}
           <div className="mb-6 flex items-center gap-3 border-b pb-4">
             <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -69,14 +74,13 @@ export default function MobileNav({ user }: { user: TUser }) {
           </div>
 
           <div className="mt-6 border-t pt-6">
-            {user ? (
+            {user && (
               <>
                 <div className="mb-4">
                   <p className="font-medium">{user.name}</p>
 
                   <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
-
                 <div className="space-y-2">
                   {userMenuItems.map((item) => {
                     const Icon = item.icon;
@@ -99,13 +103,15 @@ export default function MobileNav({ user }: { user: TUser }) {
                   <Button
                     variant="destructive"
                     className="w-full justify-start"
+                    onClick={handleLogout}
                   >
                     <IconLogout size={18} />
                     Logout
                   </Button>
                 </div>
               </>
-            ) : (
+            )}
+            {user === undefined && (
               <Button asChild className="w-full">
                 <Link href="/login">
                   <IconLogin2 size={18} />
