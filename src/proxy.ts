@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tokenConstant } from "./constant/tokenConstant";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AUTH_ROUTES } from "./constant/routesConstant";
+import { AUTH_ROUTES, PUBLIC_ROUTES } from "./constant/routesConstant";
 import { UserRole } from "./constant/userRole";
 
 export function proxy(request: NextRequest) {
@@ -20,6 +20,17 @@ export function proxy(request: NextRequest) {
       default:
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
+  }
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    (route) => path === route || path.startsWith(route + "/"),
+  );
+  const isAuthRoute = AUTH_ROUTES.some(
+    (route) => path === route || path.startsWith(route + "/"),
+  );
+
+  // Redirect unauthenticated users from protected routes
+  if (!accessToken && !isPublicRoute && !isAuthRoute) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
