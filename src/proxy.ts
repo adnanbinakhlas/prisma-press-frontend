@@ -9,6 +9,12 @@ export function proxy(request: NextRequest) {
   const accessToken = request.cookies.get(tokenConstant.accessToken)?.value;
   const decode = accessToken ? (jwt.decode(accessToken) as JwtPayload) : null;
   const role = decode?.role || null;
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    (route) => path === route || path.startsWith(route + "/"),
+  );
+  const isAuthRoute = AUTH_ROUTES.some(
+    (route) => path === route || path.startsWith(route + "/"),
+  );
 
   // Prevent authenticated users from accessing auth routes
   if (accessToken && AUTH_ROUTES.includes(path)) {
@@ -21,12 +27,6 @@ export function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
-  const isPublicRoute = PUBLIC_ROUTES.some(
-    (route) => path === route || path.startsWith(route + "/"),
-  );
-  const isAuthRoute = AUTH_ROUTES.some(
-    (route) => path === route || path.startsWith(route + "/"),
-  );
 
   // Redirect unauthenticated users to login page from protected routes
   if (!accessToken && !isPublicRoute && !isAuthRoute) {
