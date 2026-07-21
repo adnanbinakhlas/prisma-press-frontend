@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { tokenConstant } from "./constant/tokenConstant";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
 import { AUTH_ROUTES, PUBLIC_ROUTES } from "./constant/routesConstant";
+import { tokenConstant } from "./constant/tokenConstant";
 import { UserRole } from "./constant/userRole";
 
 export function proxy(request: NextRequest) {
@@ -28,9 +28,18 @@ export function proxy(request: NextRequest) {
     (route) => path === route || path.startsWith(route + "/"),
   );
 
-  // Redirect unauthenticated users from protected routes
+  // Redirect unauthenticated users to login page from protected routes
   if (!accessToken && !isPublicRoute && !isAuthRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // Redirect unauthorized users to not found page from protected routes
+  if (path.startsWith("/dashboard") && role !== UserRole.USER) {
+    return NextResponse.rewrite(new URL("/not-found", request.url));
+  } else if (path.startsWith("/admin-dashboard") && role !== UserRole.ADMIN) {
+    return NextResponse.rewrite(new URL("/not-found", request.url));
+  } else if (path.startsWith("/author-dashboard") && role !== UserRole.AUTHOR) {
+    return NextResponse.rewrite(new URL("/not-found", request.url));
   }
 
   return NextResponse.next();
